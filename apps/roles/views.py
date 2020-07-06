@@ -17,12 +17,16 @@ class create_role(CreateView):
 
 class list_all_role(ListView):
     template_name = "role/list_all.html"
-    paginate_by = 4
-    ordering = 'id_role'
+    model = Role
+    context_object_name = 'lista_roles'
+
+    def get_queryset(self):
+        key = self.request.GET.get("kword", '')
+        return Role.objects.search_role(key)
 
 class list_key_role(ListView):
     template_name = "role/lista_by_key.html"
-    context_object_name = 'roles'
+    context_object_name = 'lista_roles'
 
     def get_queryset(self):
         key = self.request.GET.get("busca", '')

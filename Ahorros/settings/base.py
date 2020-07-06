@@ -27,19 +27,13 @@ DJANGO_APPS = (
 )
 
 LOCAL_APPS = (
-    'apps.roles',
     'apps.users',
-    'apps.solicitud',
-    'apps.transaccion',
-    'apps.cuenta',
-    'apps.tablasAmortizacion',
-    'apps.credito',
-    'apps.periodoContable',
-    'apps.planCuentas',
-
+    'apps.home',
 )
 
-THIRD_PARTY_APPS = ()
+THIRD_PARTY_APPS = (
+    'django_nose',
+)
 
 INSTALLED_APPS = DJANGO_APPS + LOCAL_APPS + THIRD_PARTY_APPS
 
@@ -94,6 +88,14 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
+TEST_RUNNER = 'django_nose.NoseTestSuiteRunner'
+
+NOSE_ARGS = [
+    '--with-coverage',
+    '--cover-package=foo,bar',
+]
+
+AUTH_USER_MODEL = 'users.User'
 
 # Internationalization
 

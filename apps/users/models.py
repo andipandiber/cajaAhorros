@@ -1,49 +1,35 @@
 from django.db import models
+from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin
+
+from .managers import userManager
 
 
-from apps.roles.models import Role
+class User(AbstractBaseUser, PermissionsMixin):
 
-class Persona(models.Model):
-    codigo = models.AutoField('ID',primary_key=True)
-    cedula = models.CharField('cedula',max_length=45, unique=True)
-    nombre = models.CharField('nombres',max_length=120)
-    apellido = models.CharField('apellidos',max_length=120)
-    direccion = models.CharField('direccion',max_length=500)
-    telefono = models.CharField('telefono' , max_length=45)
-    date = models.DateField('fechaNacimiento', auto_now=False, auto_now_add=False)
+    username = models.CharField('username', max_length=10, unique=True)
     email = models.EmailField('email', unique=True)
+    IDCard = models.CharField('id',max_length=45, unique=True, blank = True)
+    name = models.CharField('nombres',max_length=120, blank = True)
+    last_name = models.CharField('apellidos',max_length=120, blank = True)
+    address = models.CharField('direccion',max_length=500, blank = True)
+    phone = models.CharField('telefono' , max_length=45, blank = True)
+    dateBirth = models.DateField('fechaNacimiento', auto_now=False, auto_now_add=False)
+    codeRegister = models.CharField(max_length=6, blank = True)
 
-    class Meta:
-        abstract = True
+    is_staff = models.BooleanField(default=False)
+    is_superuser = models.BooleanField(default=False)
+    is_active = models.BooleanField(default=False)
 
-    def __str__(self):
-        return str(self.codigo)+'-'+self.cedula+'-'+self.nombre+'-'+self.apellido
+    USERNAME_FIELD = 'username'
 
+    REQUIRED_FIELDS = ['email', 'dateBirth']
 
-class Usuario(Persona):
-    id_Usuario = models.IntegerField('IdUsuario')
-    created_at = models.DateTimeField('fechaInicio', auto_now=False, auto_now_add=True)
-    modificated = models.DateTimeField('fechaFin', auto_now=True, auto_now_add=False, null=True, blank= True)
-    id_role= models.ManyToManyField(Role)
+    objects = userManager()
 
-    class Meta:
-        verbose_name = 'user'
-        ordering = ['created_at']
+    def get_shortName(self):
+        return self.username
 
-    def __str__(self):
-       return  str(self.codigoUser)
+    def get_fullName(self):
+        return self.name +' '+ self.last_name
 
-
-class Socio(Persona):
-    id_Socio = models.IntegerField('idSocio')
-    created_at = models.DateTimeField('fechaInicio', auto_now=False, auto_now_add=True)
-    modificated = models.DateTimeField('fechaFin', auto_now=True, auto_now_add=False, null=True, blank=True)
-
-
-    class Meta:
-        verbose_name = 'partner'
-        ordering = ['created_at']
-
-    def __str__(self):
-        return str(self.codigoSocio)
 

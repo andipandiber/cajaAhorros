@@ -1,99 +1,108 @@
 from django.shortcuts import render
-from django.urls import reverse_lazy
-from django.views.generic import ListView, CreateView, TemplateView, UpdateView, DeleteView, DetailView
+from django.core.mail import send_mail
+from django.urls import reverse_lazy, reverse
+from django.contrib.auth import authenticate, login, logout
+from django.http import HttpResponseRedirect
 
-from .models import Socio,Usuario
+from django.views.generic import CreateView, View
+from django.views.generic.edit import FormView
 
-class base_view(TemplateView):
-    template_name = 'inicio.html'
+from .forms import userRegisterForm, loginUserForm, updatePasswordForm, verifyUserForm
+from .models import User
+from .functions import codeGenerator
 
-class list_all_users(ListView):
-    template_name = "persona/list_all.html"
-    paginate_by = 4
-    ordering = 'codigo'
-    context_object_name = 'users'
 
-    def get_queryset(self):
-        key = self.request.GET.get("key", '')
-        list = Usuario.objects.filter(
-             nombre__icontains= key
+class userRegisterView(FormView):
+  template_name = 'user/register.html'
+  form_class = userRegisterForm
+  success_url = '/'
+
+  def form_valid(self, form):
+    # Function that generates a Random Registration Code
+    codeRandom = codeGenerator()
+
+    usuario = User.objects.create_user(
+      form.cleaned_data['username'],
+      form.cleaned_data['email'],
+      form.cleaned_data['dateBirth'],
+      form.cleaned_data['password1'],
+      IDCard = form.cleaned_data['IDCard'],
+      name = form.cleaned_data['name'],
+      last_name = form.cleaned_data['last_name'],
+      address = form.cleaned_data['address'],
+      phone = form.cleaned_data['phone'],
+      codeRegister = codeRandom
+    )
+    subject = 'Confirmacion de Email'
+    message = 'Codigo de Verificacion: ' + codeRandom
+    emailSender = 'andipandi467@gmail.com'
+    send_mail(subject, message, emailSender, [form.cleaned_data['email'], ])
+
+    return HttpResponseRedirect(
+        reverse(
+            'user_app:user-verification',
+            kwargs = { 'pk' : usuario.id}
         )
-        return list
-
-class user_detail(DetailView):
-    model = Usuario
-    template_name = "persona/detail.html"
-
-    def get_context_data(self, **kwargs):
-        context = super(user_detail, self).get_context_data(**kwargs)
-        context["titulo"] = "Empleado"
-        return context
-    
-class list_by_roles(ListView):
-    template_name = "persona/list_by_role.html"
-    context_object_name = 'usersRoles'
-
-    def get_queryset(self):
-
-        area = self.kwargs['shortname']
-        list = Usuario.objects.filter(
-                role__name = area
-        )
-
-        return list
-
-class list_by_key(ListView):
-    template_name = "persona/list_by_key.html"
-    context_object_name = 'users'
-
-    def get_queryset(self):
-        print('---------')
-        key = self.request.GET.get("busca", '')
-        print(key)
-        list = Usuario.objects.filter(
-             nombre= key
-        )
-        print('Lista Resultados ',list)
-        return list
-
-class success_View(TemplateView):
-    template_name = "persona/success.html"
-
-class create_User(CreateView):
-    template_name = 'persona/create.html'
-    model = Usuario
-    success_url = reverse_lazy('user_app:inicio')
-
-    # Logica del Proceso
-    def form_valid(self, form):
-        user = form.save(commit=False)
-        user.save()
-        return super(create_User, self).form_valid(form)
-
-class update_user(UpdateView):
-    model = Usuario
-    template_name = "persona/update.html"
-    fields = ('__all__')
-    success_url = reverse_lazy('user_app:inicio')
-
-    def post(self, request, *args, **kwargs):
-        self.object = self.get_object()
-        print('---------Metodo Post----------------')
-        print('------------------------------------')
-        print(request.POST)
-        print('------------------------------------')
-        print(request.POST['nombre'])
-        print('------------------------------------')
-        return super().post(request, *args, **kwargs)
+      )
 
 
-    def form_valid(self, form):
-        print('---------Metodo Form-Valida---------')
-        print('------------------------------------')
+class loginUserView(FormView):
+  template_name = 'user/login.html'
+  form_class = loginUserForm
+  success_url = reverse_lazy('home_app:panel')
 
-        return super(update_user, self).form_valid(form)
+  def form_valid(self, form):
+    user = authenticate(
+      username = form.cleaned_data['username'],
+      password = form.cleaned_data['password']
+    )
 
-class delete_user(DeleteView):
-    model = Usuario
-    template_name = "persona/delete.html"
-    success_url = reverse_lazy('user_app:inicio') 
+    login(self.request, user)
+    return super(loginUserView, self).form_valid(form)
+
+class logoutUserView(View):
+
+  def get(self, request, *args, **kwargs):
+    logout(request)
+    return HttpResponseRedirect(reverse('user_app:login-register'))
+
+class updatePasswordView(FormView):
+  template_name = 'user/update.html'
+  form_class = updatePasswordForm
+  success_url = reverse_lazy('user_app:login-register')
+
+  def form_valid(self, form):
+    usuario = self.request.user
+    user = authenticate(
+      username = usuario.username,
+      password = form.cleaned_data['passwordCurrent']
+    )
+
+    if user:
+      passwordNew = form.cleaned_data['passwordNew']
+      usuario.set_password(passwordNew)
+      usuario.save()
+
+    logout(self.request)
+    return super(updatePasswordView, self).form_valid(form)
+
+class codeVerificationView(FormView):
+  template_name = 'user/verify.html'
+  form_class = verifyUserForm
+  success_url = reverse_lazy('user_app:login-register')
+
+  def get_form_kwargs(self):
+    kwargs = super(codeVerificationView, self).get_form_kwargs()
+    kwargs.update(
+      {
+        'pk' : self.kwargs['pk'],
+      }
+    )
+    return kwargs
+
+  def form_valid(self, form):
+    User.objects.filter(
+      id = self.kwargs['pk']
+    ).update(is_active = True)
+    return super(codeVerificationView, self).form_valid(form)
+

@@ -5,13 +5,9 @@ from . import views
 app_name = "user_app"
 
 urlpatterns = [
-    path('', views.base_view.as_view(), name='inicio'),
-    path('listar/', views.list_all_users.as_view(), name='user_all'),
-    path('detalle/<pk>', views.user_detail.as_view(), name='detail'),
-    path('listar2/<shortname>', views.list_by_roles.as_view(), name='userRoles'),
-    path('listar3/', views.list_by_key.as_view()),
-    path('create/', views.create_User.as_view(), name='createUser'),
-    path('success/', views.success_View.as_view(), name='creado'),
-    path('update/<pk>', views.update_user.as_view(), name='updateUser'),
-    path('delete/<pk>', views.delete_user.as_view(), name='deleteUser'),
+    path('create/', views.userRegisterView.as_view(), name='user-register'),
+    path('login/', views.loginUserView.as_view(), name='login-register'),
+    path('logout/', views.logoutUserView.as_view(), name='logout-register'),
+    path('update/', views.updatePasswordView.as_view(), name='user-update'),
+    path('user-verification/<pk>/', views.codeVerificationView.as_view(), name='user-verification'),
 ]

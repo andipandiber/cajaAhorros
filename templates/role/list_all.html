@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lista de Roles</title>
+</head>
+<body>
+
+    <h1>Lista de Roles</h1>
+
+    <p>
+        <form action="" method="get">
+            {% csrf_token %}
+            <input type="text" placeholder="Ingrese un Nombre de Rol" id="kword" name="kword">
+            <button type="submit">Consultar</button>
+        </form>
+    </p>
+
+    
+    <ul>
+        
+        {% for element in lista_roles  %}
+            <li>{{ element.name_role }}</li>    
+        {% endfor %}
+        
+    </ul>
+        
+    
+</body>
+</html>
