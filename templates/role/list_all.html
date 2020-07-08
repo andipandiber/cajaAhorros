@@ -12,20 +12,20 @@
     <p>
         <form action="" method="get">
             {% csrf_token %}
-            <input type="text" placeholder="Ingrese un Nombre de Rol" id="kword" name="kword">
+            <input type="text" id="key" name="key" placeholder="Ingrese el Nombre Aqui">
             <button type="submit">Consultar</button>
         </form>
     </p>
 
-    
+    <h3>Lista de Roles</h3>
+
     <ul>
-        
-        {% for element in lista_roles  %}
-            <li>{{ element.name_role }}</li>    
+        {% for role in roles  %}
+            <li>{{ role }}</li>
         {% endfor %}
-        
+
     </ul>
-        
-    
+
+
 </body>
 </html>

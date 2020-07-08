@@ -1,3 +1,4 @@
 # Secret Keys
 secret.json
 .scannerwork
+.coverage

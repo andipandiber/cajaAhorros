@@ -1,7 +1,9 @@
 from django.db import models
 from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin
 
+from apps.roles.models import Role
 from .managers import userManager
+
 
 
 class User(AbstractBaseUser, PermissionsMixin):
@@ -15,6 +17,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     phone = models.CharField('telefono' , max_length=45, blank = True)
     dateBirth = models.DateField('fechaNacimiento', auto_now=False, auto_now_add=False)
     codeRegister = models.CharField(max_length=6, blank = True)
+    roles = models.ManyToManyField(Role)
 
     is_staff = models.BooleanField(default=False)
     is_superuser = models.BooleanField(default=False)
