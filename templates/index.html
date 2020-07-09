@@ -1,0 +1,81 @@
+{% extends 'base.html' %}
+{% load static %}
+
+
+{% block title %}Sistema de Cajas de Ahorros{% endblock title %}
+
+
+{% block content %}
+
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+  <a class="navbar-brand" href="#">Caja de Ahorros</a>
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+  <div class="collapse navbar-collapse" id="navbarNav">
+    <ul class="navbar-nav mr-auto mt-2 mt-lg-0">
+      <li class="nav-item active">
+        <a class="nav-link" href="#">Inicio<span class="sr-only">(current)</span></a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="#">Credito</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="#">Pricing</a>
+      </li>
+    </ul>
+    <form class="form-inline" action=" {% url 'user_app:login-user' %} ">
+      <button class="btn btn-outline-secondary" type="submit">Mi Sesion</button>
+    </form>
+  </div>
+</nav>
+
+
+<div class="container">
+  <div class="row">
+    <div class="col">
+      <h1>Pagina de Inicio</h1>
+    </div>
+  </div>
+
+  <div class="row align-items-center my-5">
+    <div class="col-lg-7">
+      <img class="img-fluid rounded mb-4 mb-lg-0" src="{% static 'img/inicioCerdo.jpg' %}" alt="">
+    </div>
+    <!-- /.col-lg-8 -->
+    <div class="col-lg-5">
+      <h1 class="font-weight-light">Caja de Ahorros</h1>
+      <p>Una caja de ahorros es un tipo de entidad de crédito, junto con los bancos, las cooperativas de crédito y el Instituto de Crédito Oficial. Son instituciones de crédito sin ánimo de lucro y con finalidad social, con marcado carácter territorial.</p>
+      <a class="btn btn-primary" href="#">Mas Informacion!</a>
+    </div>
+  </div>
+
+   <!-- Call to Action Well -->
+   <div class="card text-white bg-secondary my-5 py-4 text-center">
+    <div class="card-body">
+      <p class="text-white m-0">This call to action card is a great place to showcase some important information or display a clever tagline!</p>
+    </div>
+  </div>
+
+  <!-- Content Row -->
+  <div class="row">
+    <div class="col-md-4 mb-5">
+
+      <div class="card h-100">
+        <img src="{% static 'img/imagenCredito.jpg' %}" class="card-img-top" width="400" height="400">
+        <div class="card-body">
+          <h2 class="card-title">Credito</h2>
+          <p class="card-text">Pide tu Credito Ya!!!</p>
+        </div>
+        <div class="card-footer">
+          <a href="#" class="btn btn-primary btn-sm">Informacion</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+
+{% endblock content %}

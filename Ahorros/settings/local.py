@@ -22,10 +22,8 @@ DATABASES = {
 }
 
 # Static files (CSS, JavaScript, Images)
-
-
 STATIC_URL = '/static/'
-STATICFILE_DIRS = [BASE_DIR.child('static')]
+STATICFILES_DIRS = [BASE_DIR.child('static')]
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR.child('media')

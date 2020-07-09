@@ -39,6 +39,7 @@ class userRegisterForm(forms.ModelForm):
       'address',
       'phone',
       'dateBirth',
+      'roles'
       )
 
   def clean_password2(self):
@@ -111,7 +112,7 @@ class verifyUserForm(forms.Form):
 
     if len(code) == 6:
       active = User.objects.codeValidator(self.id_user, code)
-      
+
       if not active:
         raise forms.ValidationError('El Codigo es Incorrecto')
     else:

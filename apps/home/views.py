@@ -4,7 +4,8 @@ from django.urls import reverse_lazy
 
 from django.views.generic import TemplateView
 
-
+class indexView(TemplateView):
+    template_name = 'index.html'
 
 
 class homePage(LoginRequiredMixin, TemplateView):

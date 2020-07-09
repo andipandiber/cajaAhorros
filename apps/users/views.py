@@ -2,9 +2,10 @@ from django.shortcuts import render
 from django.core.mail import send_mail
 from django.urls import reverse_lazy, reverse
 from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.http import HttpResponseRedirect
 
-from django.views.generic import CreateView, View
+from django.views.generic import CreateView, View, TemplateView
 from django.views.generic.edit import FormView
 
 from .forms import userRegisterForm, loginUserForm, updatePasswordForm, verifyUserForm
@@ -12,10 +13,11 @@ from .models import User
 from .functions import codeGenerator
 
 
-class userRegisterView(FormView):
+class userRegisterView(LoginRequiredMixin, FormView):
   template_name = 'user/register.html'
   form_class = userRegisterForm
   success_url = '/'
+  login_url = reverse_lazy('user_app:login-user')
 
   def form_valid(self, form):
     # Function that generates a Random Registration Code
@@ -37,6 +39,7 @@ class userRegisterView(FormView):
     message = 'Codigo de Verificacion: ' + codeRandom
     emailSender = 'andipandi467@gmail.com'
     send_mail(subject, message, emailSender, [form.cleaned_data['email'], ])
+
 
     return HttpResponseRedirect(
         reverse(
@@ -64,12 +67,14 @@ class logoutUserView(View):
 
   def get(self, request, *args, **kwargs):
     logout(request)
-    return HttpResponseRedirect(reverse('user_app:login-register'))
+    return HttpResponseRedirect(reverse('user_app:login-user'))
 
-class updatePasswordView(FormView):
+
+class updatePasswordView(LoginRequiredMixin, FormView):
   template_name = 'user/update.html'
   form_class = updatePasswordForm
-  success_url = reverse_lazy('user_app:login-register')
+  success_url = reverse_lazy('user_app:login-user')
+  login_url = reverse_lazy('user_app:login-user')
 
   def form_valid(self, form):
     usuario = self.request.user
@@ -89,7 +94,7 @@ class updatePasswordView(FormView):
 class codeVerificationView(FormView):
   template_name = 'user/verify.html'
   form_class = verifyUserForm
-  success_url = reverse_lazy('user_app:login-register')
+  success_url = reverse_lazy('user_app:login-user')
 
   def get_form_kwargs(self):
     kwargs = super(codeVerificationView, self).get_form_kwargs()
