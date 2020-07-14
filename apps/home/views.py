@@ -9,6 +9,6 @@ class indexView(TemplateView):
 
 
 class homePage(LoginRequiredMixin, TemplateView):
-    template_name = "home/index.html"
+    template_name = "home/panelUsuario.html"
     login_url = reverse_lazy('user_app:login-register')
 

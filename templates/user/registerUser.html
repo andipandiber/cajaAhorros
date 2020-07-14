@@ -1,0 +1,30 @@
+{% extends '../base.html' %}
+{% load static %}
+
+
+
+{% block title %}
+  Registro
+{% endblock title %}
+
+
+
+{% block content %}
+
+{% include './includes/headerLogin.html' %}
+
+
+<div class="container">
+
+  <h1 class="display-4">Crear Usuario</h1>
+  <hr>
+  <form action="" method="post">{% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">Registrar</button>
+  </form>
+
+</div>
+<hr>
+
+
+  {% endblock content %}

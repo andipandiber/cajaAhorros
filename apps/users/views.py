@@ -2,22 +2,28 @@ from django.shortcuts import render
 from django.core.mail import send_mail
 from django.urls import reverse_lazy, reverse
 from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.http import HttpResponseRedirect
 
-from django.views.generic import CreateView, View, TemplateView
+from django.views.generic import CreateView, View, TemplateView, ListView, UpdateView, DeleteView
 from django.views.generic.edit import FormView
 
-from .forms import userRegisterForm, loginUserForm, updatePasswordForm, verifyUserForm
+from .forms import userRegisterForm, loginUserForm, updatePasswordForm, verifyUserForm, listUsersForm
 from .models import User
 from .functions import codeGenerator
+from .mixins import superUserMixin
+
+from django.shortcuts import render
+from django.contrib import messages
 
 
-class userRegisterView(LoginRequiredMixin, FormView):
-  template_name = 'user/register.html'
+class userRegisterView(LoginRequiredMixin, superUserMixin, FormView):
+  template_name = 'user/registerUser.html'
   form_class = userRegisterForm
   success_url = '/'
   login_url = reverse_lazy('user_app:login-user')
+
 
   def form_valid(self, form):
     # Function that generates a Random Registration Code
@@ -54,6 +60,7 @@ class loginUserView(FormView):
   form_class = loginUserForm
   success_url = reverse_lazy('home_app:panel')
 
+
   def form_valid(self, form):
     user = authenticate(
       username = form.cleaned_data['username'],
@@ -61,16 +68,21 @@ class loginUserView(FormView):
     )
 
     login(self.request, user)
+
     return super(loginUserView, self).form_valid(form)
+
 
 class logoutUserView(View):
 
   def get(self, request, *args, **kwargs):
     logout(request)
-    return HttpResponseRedirect(reverse('user_app:login-user'))
+    return HttpResponseRedirect(
+      reverse(
+        'user_app:login-user'
+      )
+    )
 
-
-class updatePasswordView(LoginRequiredMixin, FormView):
+class updatePasswordView(LoginRequiredMixin, superUserMixin, FormView):
   template_name = 'user/update.html'
   form_class = updatePasswordForm
   success_url = reverse_lazy('user_app:login-user')
@@ -110,4 +122,41 @@ class codeVerificationView(FormView):
       id = self.kwargs['pk']
     ).update(is_active = True)
     return super(codeVerificationView, self).form_valid(form)
+
+class listUserView(LoginRequiredMixin, superUserMixin, ListView):
+  template_name = "user/list_all.html"
+  context_object_name = 'users'
+  login_url = reverse_lazy('user_app:login-user')
+
+  def get_queryset(self):
+    listUsers = User.objects.all()
+    return listUsers
+
+class updateUserView(LoginRequiredMixin, superUserMixin, UpdateView):
+  template_name = "user/updateUser.html"
+  model = User
+  login_url = reverse_lazy('user_app:login-user')
+  success_url = reverse_lazy('user_app:user-list')
+
+  fields = ('username', 'email', 'name', 'last_name', 'address',
+            'phone', 'dateBirth', 'roles')
+
+  def post(self, request, *args, **kwargs):
+    self.object = self.get_object()
+    return super().post(request, *args, **kwargs)
+
+  def form_valid(self, form):
+    return super(updateUserView, self).form_valid(form)
+
+
+class deleteUserView(LoginRequiredMixin, superUserMixin, DeleteView):
+  template_name = 'user/deleteUser.html'
+  model = User
+  login_url = reverse_lazy('user_app:login-user')
+  success_url = reverse_lazy('user_app:user-list')
+
+
+
+
+
 

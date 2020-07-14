@@ -1,0 +1,60 @@
+
+
+  <nav class="navbar navbar-expand-sm navbar-default">
+    <a class="navbar-brand" href="#">Bienvenido {{ user.username }}</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNav">
+      <ul class="navbar-nav mr-auto mt-2 mt-lg-0">
+        <li class="nav-item active">
+          <a class="nav-link" href="{% url 'home_app:panel' %}">Inicio<span class="sr-only">(current)</span></a>
+        </li>
+
+
+
+        {% if user.is_superuser %}
+          <li class="nav-item">
+            <a class="nav-link" href="{% url 'user_app:register-user' %}">Crear Cuenta</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="{% url 'user_app:user-list' %}">Usuarios</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="{% url 'user_app:user-updatePassword' %}">Actualizar Password</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#">Roles</a>
+          </li>
+        {% endif %}
+
+        {% if perms.users.is_Socio %}
+          <li class="nav-item">
+            <a class="nav-link" href="#">Cuenta</a>
+          </li>
+        {% endif %}
+
+        {% if perms.users.is_Usuario %}
+          <li class="nav-item">
+            <a class="nav-link" href="#">Credito</a>
+          </li>
+        {% endif %}
+
+
+
+        <li class="nav-item">
+          <a class="nav-link" href="#">Solicitud</a>
+        </li>
+      </ul>
+
+      <form class="form-inline" action=" {% url 'user_app:logout-user' %} ">
+        <button class="btn btn-outline-danger" type="submit">Salir</button>
+      </form>
+
+    </div>
+  </nav>
+
+
+
+
+

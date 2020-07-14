@@ -12,6 +12,7 @@ class userRegisterForm(forms.ModelForm):
     required = True,
     widget = forms.PasswordInput(
         attrs = {
+            'class' : 'form-control',
             'placeholder': 'Password'
         }
       )
@@ -22,6 +23,7 @@ class userRegisterForm(forms.ModelForm):
     required = True,
     widget = forms.PasswordInput(
         attrs = {
+            'class' : 'form-control',
             'placeholder': 'Repeat Password'
         }
     )
@@ -30,17 +32,62 @@ class userRegisterForm(forms.ModelForm):
   class Meta:
 
     model = User
-    fields = (
-      'username',
-      'email',
-      'IDCard',
-      'name',
-      'last_name',
-      'address',
-      'phone',
-      'dateBirth',
-      'roles'
+    fields = ( 'username', 'email', 'IDCard', 'name', 'last_name',
+               'address', 'phone', 'dateBirth', 'user_permissions',
+
       )
+
+    required = True,
+    widgets = {
+      'username' : forms.TextInput(
+        attrs = {
+              'class' : 'form-control',
+              'placeholder' : 'Ingrese un Nombre de Usuario...',
+        }
+      ),
+      'email' : forms.EmailInput(
+        attrs = {
+              'class' : 'form-control',
+              'placeholder' : 'Ingrese un Correo...'
+        }
+      ),
+      'IDCard' : forms.TextInput(
+        attrs = {
+              'class' : 'form-control',
+              'placeholder' : 'Ingrese la Cedula...',
+        }
+      ),
+      'name' : forms.TextInput(
+        attrs = {
+              'class' : 'form-control',
+              'placeholder' : 'Ingrese sus Nombres...',
+        }
+      ),
+      'last_name' : forms.TextInput(
+        attrs = {
+              'class' : 'form-control',
+              'placeholder' : 'Ingrese sus Apellidos...',
+        }
+      ),
+      'address' : forms.TextInput(
+        attrs = {
+              'class' : 'form-control',
+              'placeholder' : 'Ingrese una direccion...',
+        }
+      ),
+      'phone' : forms.NumberInput(
+        attrs = {
+              'class' : 'form-control',
+              'placeholder' : 'Ingrese el Telefono...',
+        }
+      ),
+      'dateBirth' : forms.DateInput(
+        attrs = {
+              'class':'form-control',
+              'placeholder':'Fecha',
+        }
+      )
+    }
 
   def clean_password2(self):
     if self.cleaned_data['password1'] != self.cleaned_data['password2']:
@@ -117,3 +164,13 @@ class verifyUserForm(forms.Form):
         raise forms.ValidationError('El Codigo es Incorrecto')
     else:
       raise forms.ValidationError('El Codigo es Incorrecto')
+
+
+class listUsersForm(forms.Form):
+
+  model = User
+
+  fields = (
+    'username',
+    'email'
+  )

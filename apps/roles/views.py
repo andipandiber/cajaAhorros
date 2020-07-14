@@ -27,7 +27,7 @@ class updateRoleView(LoginRequiredMixin, UpdateView):
     template_name = "role/update.html"
     model = Role
     fields = ('__all__')
-    success_url = '/'
+    success_url = reverse_lazy('role_app:base')
     login_url = reverse_lazy('user_app:login-user')
 
     def post(self, request, *args, **kwargs):
@@ -40,7 +40,7 @@ class updateRoleView(LoginRequiredMixin, UpdateView):
 class deleteRoleView(LoginRequiredMixin, DeleteView):
     model = Role
     template_name = "role/delete.html"
-    success_url = '/'
+    success_url = reverse_lazy('role_app:base') 
     login_url = reverse_lazy('user_app:login-user')
 
 class listRoleView(LoginRequiredMixin, ListView):

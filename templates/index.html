@@ -7,28 +7,7 @@
 
 {% block content %}
 
-<nav class="navbar navbar-expand-lg navbar-light bg-light">
-  <a class="navbar-brand" href="#">Caja de Ahorros</a>
-  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-    <span class="navbar-toggler-icon"></span>
-  </button>
-  <div class="collapse navbar-collapse" id="navbarNav">
-    <ul class="navbar-nav mr-auto mt-2 mt-lg-0">
-      <li class="nav-item active">
-        <a class="nav-link" href="#">Inicio<span class="sr-only">(current)</span></a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link" href="#">Credito</a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link" href="#">Pricing</a>
-      </li>
-    </ul>
-    <form class="form-inline" action=" {% url 'user_app:login-user' %} ">
-      <button class="btn btn-outline-secondary" type="submit">Mi Sesion</button>
-    </form>
-  </div>
-</nav>
+{% include 'includes/header.html' %}
 
 
 <div class="container">
@@ -53,7 +32,7 @@
    <!-- Call to Action Well -->
    <div class="card text-white bg-secondary my-5 py-4 text-center">
     <div class="card-body">
-      <p class="text-white m-0">This call to action card is a great place to showcase some important information or display a clever tagline!</p>
+      <p class="text-white m-0">Pida Su Credito Ahora!</p>
     </div>
   </div>
 

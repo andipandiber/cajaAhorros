@@ -21,7 +21,7 @@ class User(AbstractBaseUser, PermissionsMixin):
 
     is_staff = models.BooleanField(default=False)
     is_superuser = models.BooleanField(default=False)
-    is_active = models.BooleanField(default=False)
+    is_active = models.BooleanField(default=True)
 
     USERNAME_FIELD = 'username'
 
@@ -29,10 +29,17 @@ class User(AbstractBaseUser, PermissionsMixin):
 
     objects = userManager()
 
+    class Meta:
+        permissions = [
+            ('is_Socio', 'is Socio'),
+            ('is_Usuario', 'is Usuario'),
+        ]
+
+
     def get_shortName(self):
         return self.username
 
-    def get_fullName(self):
+    def __str__(self):
         return self.name +' '+ self.last_name
 
 

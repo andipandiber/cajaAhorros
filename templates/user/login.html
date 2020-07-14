@@ -1,20 +1,45 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Login del Sistema</title>
-</head>
-<body>
+{% extends '../base.html' %}
+{% load static %}
 
-  <h1>Login Usuario</h1>
 
-  <form method="post">{% csrf_token %}
 
-    {{ form.as_p}}
+{% block title %}
+  Login Usuario
+{% endblock title %}
 
-    <button type="submit">acceder</button>
-  </form>
 
-</body>
-</html>
+{% block content %}
+
+{% include '../includes/header.html' %}
+
+<hr>
+<center>
+<div class="container login-container">
+  <div class="row">
+    <div class="col-md-6 login-form-1">
+        <h3>Inicio de Sesion</h3>
+            <form method="post">
+              {% csrf_token %}
+            <div class="form-group">
+              {{ form.username }}
+            </div>
+            <div class="form-group">
+                {{ form.password }}
+            </div>
+            <div class="form-group">
+                <input type="submit" class="btnSubmit" value="Acceder" />
+            </div>
+            <div class="form-group">
+                <a href="#" class="btnForgetPwd">Olvide mi Password?</a>
+            </div>
+            </form>
+    </div>
+  </div>
+</div>
+</center>
+
+{% endblock content %}
+
+
+
+

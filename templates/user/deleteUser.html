@@ -3,11 +3,15 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>FAllos</title>
+  <title>Confirmacion</title>
 </head>
 <body>
 
-  <h1>Inicie Session porfa</h1>
+  <h1>Confirmacion de Usuario</h1>
+
+  <form action="" method="post"> {% csrf_token %}
+    <button type="submit">Confirmar</button>
+  </form>
 
 </body>
 </html>
